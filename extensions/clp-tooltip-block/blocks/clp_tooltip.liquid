@@ -2,14 +2,44 @@
   function _hide()
   {
     var tooltip = document.getElementsByClassName('test_tooltip')[0]
+    tooltip.classList.remove("animate")
     console.log(tooltip)
     tooltip.style.display = 'none'
   }
 </script>
 
-<div class="test_tooltip" style="position: absolute; top: 180px; display: none; z-index:100; width: 100%">
+<style>
+.test_tooltip.animate {
+  display: block;
+  top: 180px;
+  opacity: 1;
+}
+
+.test_tooltip {
+  position: absolute;
+  top: 500px;
+  z-index:100;
+  width: 100%;
+  transition: all 1s linear;
+  opacity: 0;
+}
+
+.test_tooltip::before {
+    content: "";
+    width: 0;
+    display: block;
+    height: 0;
+    margin-left: 20px;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid white;
+}
+
+</style>
+
+<div class="test_tooltip" style="position: absolute; display: none; z-index:100; width: 100%">
   {{ block.settings.tooltip_content }}
-  <button style="position: absolute; top: 0; border: 0; right: 0;" onclick={_hide()}>X</button>
+  <button style="position: absolute; top: 20px; border: 0; right: 5px; background: transparent;" onclick={_hide()}>X</button>
 </div>
 {% schema %}
 {
