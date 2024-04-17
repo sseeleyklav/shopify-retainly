@@ -1,0 +1,26 @@
+<script>
+  function _hide()
+  {
+    var tooltip = document.getElementsByClassName('test_tooltip')[0]
+    console.log(tooltip)
+    tooltip.style.display = 'none'
+  }
+</script>
+
+<div class="test_tooltip" style="position: absolute; top: 180px; display: none; z-index:100; width: 100%">
+  {{ block.settings.tooltip_content }}
+  <button style="position: absolute; top: 0; border: 0; right: 0;" onclick={_hide()}>X</button>
+</div>
+{% schema %}
+{
+  "name": "Retainly Tooltip",
+  "target": "section",
+  "settings": [
+    { 
+      "type": "html", 
+      "id": "tooltip_content", 
+      "label": "Tooltip Content"
+    }
+  ]
+}
+{% endschema %}
