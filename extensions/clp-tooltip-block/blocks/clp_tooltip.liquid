@@ -1,4 +1,79 @@
 <script>
+  const KLAVIYO_TRACK_API = 'https://a.klaviyo.com/api/track?data=';
+
+  const KLAVIYO_ACCOUNT_ID = 'TeAqZs';
+  
+  console.log('RETAINLY ENTRY');
+
+  let myItem = null;
+  if (typeof item !== 'undefined') {
+    myItem = item;
+  }
+
+  const showFormAndSendExtractedProductInfoEvent = () => {
+    const body = {
+      token: KLAVIYO_ACCOUNT_ID,
+      event: 'Extracted Product Info',
+      customer_properties: {
+        $email: 'thakkar1016+1234@gmail.com',
+      },
+      properties: {
+        product_name: myItem.Name,
+        product_id: myItem.ProductID,
+      },
+    };
+    document.getElementsByClassName('test_tooltip')[0].style.display = "block"
+    document.getElementsByClassName('test_tooltip')[0].classList.add("animate")
+    fetch(KLAVIYO_TRACK_API + btoa(JSON.stringify(body)));
+    console.log('Extracted Product Info Event Sent');
+  };
+
+  const productNode = document.getElementsByClassName('product__title')[0]
+  document.addEventListener("copy", () => {
+    if(myItem)
+    {
+      const selectedText = window.getSelection().toString();
+      console.log('Product Name: ' + myItem.Name);
+      console.log('Selected Text: ' + selectedText);
+
+      if (
+        myItem.Name &&
+        selectedText.length > 3 &&
+        (myItem.Name.trim().includes(selectedText.trim()) || myItem.Name.trim() === selectedText.trim())
+      ) {
+        showFormAndSendExtractedProductInfoEvent();
+      }
+    }
+  });
+
+  const imageListener = (event) => {
+    event.stopPropagation();
+    window.addEventListener('resize', () => {
+      showFormAndSendExtractedProductInfoEvent();
+    });
+  };
+
+  const imageExtension = myItem.ImageURL.split('.').pop();
+  const xpath = `//img[contains(@src, '${imageExtension}')]`;
+  const imageEl = document.evaluate(
+    xpath,
+    document,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+  ).singleNodeValue;
+  let currentEl = imageEl;
+  let loop = true;
+
+  while (loop) {
+    currentEl.addEventListener('contextmenu', imageListener);
+    if (currentEl.offsetWidth === currentEl.parentNode.offsetWidth) {
+      currentEl = currentEl.parentElement;
+    } else {
+      loop = false;
+    }
+  }
+
+
   function _hide()
   {
     var tooltip = document.getElementsByClassName('test_tooltip')[0]
